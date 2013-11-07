@@ -8,6 +8,9 @@
 #include <string>
 using namespace std;
 
+int currentCount();
+void updateCount();
+
 class fileObject {
 		string loc, name, extension;
 		int type;
@@ -21,4 +24,5 @@ class fileObject {
 	private:
 		bool validExtension(string);
 		void setFileAttributes(string);
+		int getImage();
 };
