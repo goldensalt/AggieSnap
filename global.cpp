@@ -1,13 +1,41 @@
 #include "global.h"
 
-bool validExtension(string url) {
+// Asks the user for an input file and accept it if extension is valid.
+int fileObject::acceptInput() {
+	cout << "Please enter a URL or local picture filename: ";
+	cin >> loc;
+
+	// Determines if file is a local file or a URL
+	if ((loc.substr(0, 7) == "http://" || loc.substr(0, 8) == "https://") || loc.substr(0, 4) == "www.") {
+		type = 0;
+	} else {
+		// local file
+		type = 1;
+	}
+
+	// Invalid extension
+	if (!validExtension(loc)) {
+		return 1;
+	}
+
+	// Set the value of the fileObject's name and extension
+	setFileAttributes(loc);
+
+
+	return 0;
+
+
+}
+
+// Checks the file for a valid extension and also updates value of object's extension
+bool fileObject::validExtension(string file) {
 	int pos = 1;
 	string section, ext;
 	string exts[] = {"jpg", "gif", "jpeg", "JPG", "GIF", "JPEG"};
 
 	while (1) {
 		try {
-			section = url.substr(url.length()-pos, pos);
+			section = file.substr(file.length()-pos, pos);
 
 			// Record filename's extension
 			if (section.substr(0, 1) == ".") {
@@ -16,8 +44,7 @@ bool validExtension(string url) {
 			}
 			pos++;
 		} catch (exception &e) {
-			cerr << e.what() << endl;
-			exit (EXIT_FAILURE);
+			return 0;
 		}
 	}
 
@@ -29,35 +56,8 @@ bool validExtension(string url) {
 	return 0;
 }
 
-string getExtension(string file) {
-	// init vars
-	int pos = 1;
-	string section, ext;
-
-	// Step backwards one character at a time until reach the first period.
-	while (1) {
-		try {
-			section = file.substr(file.length()-pos, pos);
-
-			// Record filename's extension
-			if (section.substr(0, 1) == ".") {
-				ext = section.substr(1, section.length() - 1);
-				break;
-			}
-
-			// increment position if period not found
-			pos++;
-		} catch (exception &e) {
-			cerr << e.what() << endl;
-			exit (EXIT_FAILURE);
-		}
-	}
-
-	// Return extension of file
-	return ext;
-}
-
-string getName(string file) {
+// Sets the values of the fileObject's name and extension
+void fileObject::setFileAttributes(string file) {
 	// init vars
 	int pos = 1;
 	string section, ext, name;
@@ -70,12 +70,17 @@ string getName(string file) {
 			// Record filename's extension
 			if (section.substr(0, 1) == ".") {
 				ext = section.substr(1, section.length() - 1);
-				break;
+
+				// Set fileObject's extension
+				this->extension = ext;
 			}
 
 			// Record filename
-			if (section.substr(0, 1) == "/") {
+			if (section.substr(0, 1) == "/" || pos == file.length()) {
 				name = section.substr(1, section.length()-ext.length()-2);
+
+				// Set fileObject's name
+				this->name = name;
 				break;
 			}
 
@@ -86,85 +91,8 @@ string getName(string file) {
 			exit (EXIT_FAILURE);
 		}
 	}
-
-	// Return name of file
-	return name;
 }
 
-void downloadImage(string url) {
-	int pos = 1;
-	string section, ext, name, errorStatus;
-	bool extFound = false, nameFound = false;
-
-	while (1) {
-		try {
-			section = url.substr(url.length()-pos, pos);
-
-			// Record filename's extension
-			if (section.substr(0, 1) == "." && extFound == false) {
-				ext = section.substr(1, section.length()-1);
-				extFound = true;
-			}
-
-			// Record filename
-			if (section.substr(0, 1) == "/" && nameFound == false) {
-				name = section.substr(1, section.length()-ext.length()-2);
-				nameFound = true;
-				break;
-			}
-			pos++;
-		} catch(exception &e) {
-			cerr << e.what() << endl;
-			exit (EXIT_FAILURE);
-		}
-	}
-	string command = "wget " + url + " -O images/" + name + "." + 
-ext + " > nul 2>&1";
-	system(command.c_str());
-}
-
-void addEntry(string filename, string ext, string url, string tag_one, string tag_two, string tag_three, string tag_four, string tag_five) {
-	//ID^file_name^ext^unixtimestamp^URL^tag1^tag2^tag3^tag4^tag5
-	string sep = "^";
-	ofstream db("db", ios::app);
-	if (db.is_open()) {
-		db << currentCount() << sep << filename << sep << ext << sep << time(0) << sep << url << tag_one << sep << tag_two << sep << tag_three << sep << tag_four << sep << tag_five << sep;
-	}
-	db.close();
-
-	// update ID counter
-	updateCount();
-
-}
-
-void updateCount() {
-	// Get current value of counter
-	string line;
-	int count = 0;
-	ifstream current("counter");
-	if (current.is_open()) {
-		getline(current, line);
-		count = atoi(line.c_str());
-		current.close();
-	}
-	// Update value of counter
-	++count;
-	ofstream update("counter");
-	if (update.is_open()) {
-		update << count;
-		update.close();
-	}
-}
-
-int currentCount() {
-	// Get current value of counter
-	string line;
-	int count = 0;
-	ifstream current("counter");
-	if (current.is_open()) {
-		getline(current, line);
-		count = atoi(line.c_str());
-		current.close();
-	}
-	return count;
+void fileObject::printInfo() {
+	cout << "------\nLocation:\t" << loc << "\nName:\t" << name << "\nExtension:\t" << extension << "\nType:\t" << type << "\n------" << endl;
 }

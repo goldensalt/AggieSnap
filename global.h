@@ -8,17 +8,17 @@
 #include <string>
 using namespace std;
 
-// Checks if the file has a valid Extension
-bool validExtension(string);
-// Returns the file's extension
-string getExtension(string);
-// Returns the file's name
-string getName(string);
-// Downloads the file from a URL and moves it into the images folder
-void downloadImage(string);
-// Adds the file data into the image db
-void addEntry(string, string, string, string, string, string, string, string);
-// Gets the current file ID count
-int currentCount();
-// Updates the file ID counter
-void updateCount();
+class fileObject {
+		string loc, name, extension;
+		int type;
+	public:
+		int acceptInput();
+		string getLoc() { return loc; }
+		int getType() { return type; }
+		string getName() { return name; }
+		string getExtension() { return extension; }
+		void printInfo();
+	private:
+		bool validExtension(string);
+		void setFileAttributes(string);
+};
