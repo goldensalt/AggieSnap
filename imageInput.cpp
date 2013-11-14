@@ -1,5 +1,4 @@
 #include "global.h"
-#include "imageInput.h"
 
 // Asks the user for an input file and accept it if extension is valid.
 int imageInput::acceptInput() {
@@ -108,13 +107,14 @@ void imageInput::setAttributes(string file) {
 	id = to_string(currentCount());
 }
 
+// save the image
 int imageInput::saveImage() {
 	string command;
 	int error = 0;
 
 	// if imageInput is a URL, download from internet
 	if (getType() == 0) {
-		command = "wget " + getLoc() + " -O images/" + getID() + "." + getExtension() + " >/dev/null 2>&1";
+		command = "wget --no-check-certificate " + getLoc() + " -O images/" + getID() + "." + getExtension() + " >/dev/null 2>&1";
 	} else  {
 		// copy local file
 		command = "cp " + getLoc() +  " images/" + getID() + "." + getExtension() + " >/dev/null 2>&1";
@@ -143,10 +143,12 @@ int imageInput::saveImage() {
 	return 0;
 }
 
+// print image info
 void imageInput::printInfo() {
-	cout << "------\nLocation:\t" << loc << "\nName:\t" << name << "\nExtension:\t" << extension << "\nType:\t" << type << "\n------" << endl;
+	cout << "------\nlocation:\t" << loc << "\nname:\t" << name << "\nextension:\t" << extension << "\ntype:\t" << type << "\n------" << endl;
 }
 
+// Add image to db
 void imageInput::addEntry() {
 	// Update value of counter
 	ofstream db("db", ios::app);

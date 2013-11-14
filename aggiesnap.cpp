@@ -1,6 +1,5 @@
 // All of our header files and function definitions
 #include "global.h"
-#include "imageInput.h"
 
 int main() {
 	int total = 0, error = 0;

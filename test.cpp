@@ -2,5 +2,6 @@
 using namespace std;
 
 int main() {
-	getImage(2);
+	imageOutput test = getImage(2);
+	test.printInfo();
 }

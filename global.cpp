@@ -27,7 +27,7 @@ void updateCount() {
 }
 
 string strtolower(string str) {
-	for (int i = 0; i < str.length(); ++i) {
+	for (auto i = 0; i < str.length(); ++i) {
 		str[i] = tolower(str[i]);
 	}
 
@@ -51,7 +51,7 @@ imageOutput getImage(int id) {
     			pos = line.find("^", offset);
 
     			// Check to see if id matches id being searched for. If not, break out of current search and look in next string
-    			if (line.substr(offset, pos-offset) != to_string(id)) {
+    			if (line.substr(offset, pos-offset) != to_string(id) && found == false) {
     				break;
     			}
 
@@ -63,9 +63,26 @@ imageOutput getImage(int id) {
     }
 	db.close();
 
-	// If it found a match, store data into imageObject
+	// If it found a match, set all the values of hte image object
 	if (found) {
-
+		image.setAttributes(atoi(data[0].c_str()), data[1], data[2], atoi(data[3].c_str()), data[4], data[5], data[6], data[7], data[8], data[9]);
+	} else {
+		image.setAttributes(0, "", "", 0, "", "", "", "", "", "");
 	}
 	return image;
+}
+
+vector<int> searchImages(int mode, string text) {
+	vector<int> results;
+	switch (mode) {
+		// Search by ID
+		case 1:
+			for (auto i = 1; i < currentCount(); ++i) {
+				imageOutput check = getImage(i);
+				if (check.getID() == atoi(text.c_str())) {
+					results.push_back(i);
+				}
+			}
+			break;
+	}
 }
