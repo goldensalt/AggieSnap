@@ -1,0 +1,6 @@
+# this is a comment
+# each line is an entry to the imagedb
+# follow this format:
+# ID^file_name^unixtimestamp^URL^tag1^tag2^tag3^tag4^tag5
+#
+# example: 1^reveilleVIII.jpg^1029475849^null^tag1^tag2^tag3^tag4^tag5

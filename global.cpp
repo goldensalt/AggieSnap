@@ -1,141 +1,5 @@
 #include "global.h"
 
-// Asks the user for an input file and accept it if extension is valid.
-int fileObject::acceptInput() {
-	int error = 0;
-	cout << "Please enter a URL or local picture filename: ";
-	cin >> loc;
-
-	// Determines if file is a local file or a URL
-	if ((loc.substr(0, 7) == "http://" || loc.substr(0, 8) == "https://") || loc.substr(0, 4) == "www.") {
-		type = 0;
-	} else {
-		// local file
-		type = 1;
-	}
-
-	// Invalid extension
-	if (!validExtension(loc)) {
-		return 1;
-	}
-
-	// Set the value of the fileObject's name and extension
-	setFileAttributes(loc);
-
-	// Download / copy file from URL or local
-	error = this->getImage();
-
-	// If there was an error while copying/downloading image
-	if (error != 0) {
-		return error;
-	}
-
-	return 0;
-
-
-}
-
-// Checks the file for a valid extension and also updates value of object's extension
-bool fileObject::validExtension(string file) {
-	int pos = 1;
-	string section, ext;
-	string exts[] = {"jpg", "gif", "jpeg", "JPG", "GIF", "JPEG"};
-
-	while (1) {
-		try {
-			section = file.substr(file.length()-pos, pos);
-
-			// Record filename's extension
-			if (section.substr(0, 1) == ".") {
-				ext = section.substr(1, section.length() - 1);
-				break;
-			}
-			pos++;
-		} catch (exception &e) {
-			return 0;
-		}
-	}
-
-	for (int i = 0; i < 6; ++i) {
-		if (ext == exts[i]) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
-// Sets the values of the fileObject's name and extension
-void fileObject::setFileAttributes(string file) {
-	// init vars
-	int pos = 1;
-	string section, ext, name;
-
-	// Step backwards one character at a time until reach the first period.
-	while (1) {
-		try {
-			section = file.substr(file.length()-pos, pos);
-
-			// Record filename's extension
-			if (section.substr(0, 1) == ".") {
-				ext = section.substr(1, section.length() - 1);
-
-				// Set fileObject's extension
-				this->extension = ext;
-			}
-
-			// Record filename
-			if (section.substr(0, 1) == "/" || pos == file.length()) {
-				name = section.substr(1, section.length()-ext.length()-2);
-
-				// Set fileObject's name
-				this->name = name;
-				break;
-			}
-
-			// increment position if period not found
-			pos++;
-		} catch (exception &e) {
-			cerr << e.what() << endl;
-			exit (EXIT_FAILURE);
-		}
-	}
-}
-
-int fileObject::getImage() {
-	string command;
-	int error = 0;
-
-	// if fileObject is a URL, download from internet
-	if (this->getType() == 0) {
-		command = "wget " + this->getLoc() + " -O images/" + to_string(currentCount()) + "." + this->getExtension() + " >/dev/null 2>&1";
-	} else  {
-		// copy local file
-		command = "cp " + this->getLoc() +  " images/" + to_string(currentCount()) + "." + this->getExtension() + " >/dev/null 2>&1";
-	}
-
-	// Execute command
-	error = system(command.c_str());
-
-	// Error downloading from URL
-	if (error != 0 && this->getType() == 0) {
-		return 2;
-	}
-
-	// Error copying local file
-	if (error != 0 && this->getType() == 1) {
-		return 3;
-	}
-
-	// Update counter
-	updateCount();
-
-	return 0;
-}
-
-void fileObject::printInfo() {
-	cout << "------\nLocation:\t" << loc << "\nName:\t" << name << "\nExtension:\t" << extension << "\nType:\t" << type << "\n------" << endl;
-}
-
 int currentCount() {
 	// Get current value of counter
 	string line;
@@ -160,4 +24,48 @@ void updateCount() {
 		update << count;
 		update.close();
 	}
+}
+
+string strtolower(string str) {
+	for (int i = 0; i < str.length(); ++i) {
+		str[i] = tolower(str[i]);
+	}
+
+	return str;
+}
+
+imageOutput getImage(int id) {
+	string line;
+    ifstream db("db");
+    vector<string> data;
+    bool found = false;
+    imageOutput image;
+
+    // If file opened successfully
+    if (db) {
+    	// get each line of file
+    	while (getline(db, line) && found == false) {
+    		int offset = 0, pos = 0;
+    		// While it keeps finding delimeters
+    		while (line.find("^", offset) != string::npos) {
+    			pos = line.find("^", offset);
+
+    			// Check to see if id matches id being searched for. If not, break out of current search and look in next string
+    			if (line.substr(offset, pos-offset) != to_string(id)) {
+    				break;
+    			}
+
+    			data.push_back(line.substr(offset, pos-offset));
+    			offset = pos+1;
+    			found = true;
+    		}
+    	}
+    }
+	db.close();
+
+	// If it found a match, store data into imageObject
+	if (found) {
+
+	}
+	return image;
 }

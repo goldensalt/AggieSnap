@@ -1,6 +1,6 @@
-#include <iostream>
+#include "global.h"
 using namespace std;
 
 int main() {
-	cout << time(0) << endl;
+	getImage(2);
 }

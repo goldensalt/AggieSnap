@@ -1,35 +1,36 @@
 // All of our header files and function definitions
 #include "global.h"
+#include "imageInput.h"
 
 int main() {
 	int total = 0, error = 0;
-	fileObject file;
+	imageInput image;
 
 	cout << "Enter \"done\" when you are finished adding images" << endl << endl;
 	do {
-		error = file.acceptInput();
+		error = image.acceptInput();
 
-		if (file.getLoc() == "done") {
+		if (image.getLoc() == "done") {
 			break;
 		}
 
 		// Error codes
 		// Invalid extension
 		if (error == 1) {
-			cerr << "Error: invalid file extension." << endl << endl;
+			cerr << "Error: invalid image extension." << endl << endl;
 		} else if (error == 2) {
 			// invalid url
-			cerr << "Error: unable to download file from supplied URL." << endl << endl;
+			cerr << "Error: unable to download image from supplied URL." << endl << endl;
 		} else if (error == 3) {
-			cerr << "Error: unable to find local file from supplied location." << endl << endl;
+			cerr << "Error: unable to find local image from supplied location." << endl << endl;
 		}
 
-		if (file.getLoc() != "done" && error == 0) {
-			cout << file.getName() << "." << file.getExtension() << " has been added to the image database!" << endl << endl;
+		if (image.getLoc() != "done" && error == 0) {
+			cout << image.getName() << "." << image.getExtension() << " has been added to the image database!" << endl << endl;
 			++total;
 		}
 
-		//file.printInfo();
+		//image.printInfo();
 	} while (1);
 
 	cout << "\n" << total << " picture(s) have been added to the image database!" << endl;
