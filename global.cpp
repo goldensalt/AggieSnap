@@ -77,12 +77,54 @@ vector<int> searchImages(int mode, string text) {
 	switch (mode) {
 		// Search by ID
 		case 1:
+			// Cycle through all of the images
 			for (auto i = 1; i < currentCount(); ++i) {
 				imageOutput check = getImage(i);
-				if (check.getID() == atoi(text.c_str())) {
+				if (check.getID() == stoi(text)) {
+					results.push_back(i);
+				}
+			}
+			break;
+		// Search by filename
+		case 2:
+			// Cycle through all of the images
+			for (auto i = 1; i < currentCount(); ++i) {
+				imageOutput check = getImage(i);
+				if (check.getName() == text) {
+					results.push_back(i);
+				}
+			}
+			break;
+		// Search by extension
+		case 3:
+			// Cycle through all of the images
+			for (auto i = 1; i < currentCount(); ++i) {
+				imageOutput check = getImage(i);
+				if (strtolower(check.getExtension()) == text) {
+					results.push_back(i);
+				}
+			}
+			break;
+		// Search by filename.extension
+		case 4:
+			// Cycle through all of the images
+			for (auto i = 1; i < currentCount(); ++i) {
+				imageOutput check = getImage(i);
+				if (check.getName() + "." + strtolower(check.getExtension()) == text) {
+					results.push_back(i);
+				}
+			}
+			break;
+		// Search by tag
+		case 5:
+			// Cycle through all of the images
+			for (auto i = 1; i < currentCount(); ++i) {
+				imageOutput check = getImage(i);
+				if (check.getTag(1) == text || check.getTag(2) == text || check.getTag(3) == text || check.getTag(4) == text || check.getTag(5) == text) {
 					results.push_back(i);
 				}
 			}
 			break;
 	}
+	return results;
 }

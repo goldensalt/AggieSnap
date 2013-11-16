@@ -17,5 +17,16 @@ void imageOutput::setAttributes(int id, string name, string ext, int date, strin
 
 // print image info
 void imageOutput::printInfo() {
-	cout << "------\nid:\t" << id << "\nname:\t" << name << "\eExtension:\t" << ext << "\ndate:\t" << date << "\nloc:\t" << loc << "\ntag 1:\t" << tag[0] << "\ntag 2:\t" << tag[1] << "\ntag 3:\t" << tag[2] << "\ntag 4:\t" << tag[3] << "\ntag 5:\t" << tag[4] << "\n------" << endl;
+	cout << "------" << endl;
+	cout << "id:\t\t" << id << endl;
+	cout << "name:\t\t" << name << endl;
+	cout << "Extension:\t" << ext << endl;
+	cout << "date:\t\t" << date << endl;
+	cout << "loc:\t\t" << loc << endl;
+	cout << "tag 1:\t\t" << tag[0] << endl;
+	cout << "tag 2:\t\t" << tag[1] << endl;
+	cout << "tag 3:\t\t" << tag[2] << endl;
+	cout << "tag 4:\t\t" << tag[3] << endl;
+	cout << "tag 5:\t\t" << tag[4] << endl;
+	cout << "------" << endl;
 }
