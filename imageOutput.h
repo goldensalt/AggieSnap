@@ -1,10 +1,12 @@
 class imageOutput {
-	int id = 0, date = 0;
-	string name, ext, loc;
+	int type = 0, id = 0, date = 0;;
+	string loc, name, extension;
 	vector<string> tag;
 	public:
-		void printInfo();
 		void setAttributes(int, string, string, int, string, string, string, string, string, string);
+		void printInfo();
+
+		// Get functions
 		int getID() { return id; }
 		string getName() { return name; }
 		string getExtension() { return ext; }

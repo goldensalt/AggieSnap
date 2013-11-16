@@ -1,24 +1,27 @@
+// Header and function definitions
 #include "global.h"
 
+// Get current value of counter
 int currentCount() {
-	// Get current value of counter
 	string line;
 	int count = 0;
 	ifstream current("counter");
 	if (current.is_open()) {
 		getline(current, line);
-		count = atoi(line.c_str());
+		count = stoi(line);
 		current.close();
 	}
 	return count;
 }
 
+// Update value of counter
 void updateCount() {
 	// Get current value of counter
 	int count = currentCount();
 
 	// Update value of counter
 	++count;
+
 	ofstream update("counter");
 	if (update.is_open()) {
 		update << count;
@@ -26,14 +29,15 @@ void updateCount() {
 	}
 }
 
+// Convert a string to lowercase
 string strtolower(string str) {
 	for (auto i = 0; i < str.length(); ++i) {
 		str[i] = tolower(str[i]);
 	}
-
 	return str;
 }
 
+// Return image object of image based on id
 imageOutput getImage(int id) {
 	string line;
     ifstream db("db");
@@ -63,20 +67,21 @@ imageOutput getImage(int id) {
     }
 	db.close();
 
-	// If it found a match, set all the values of hte image object
+	// If it found a match, set all the values of the image object else return a null image object
 	if (found) {
-		image.setAttributes(atoi(data[0].c_str()), data[1], data[2], atoi(data[3].c_str()), data[4], data[5], data[6], data[7], data[8], data[9]);
+		image.setAttributes(stoi(data[0]), data[1], data[2], stoi(data[3]), data[4], data[5], data[6], data[7], data[8], data[9]);
 	} else {
 		image.setAttributes(0, "", "", 0, "", "", "", "", "", "");
 	}
 	return image;
 }
 
+// Return a vector of image IDs that match specified search parameters
 vector<int> searchImages(int mode, string text) {
 	vector<int> results;
 	switch (mode) {
 		// Search by ID
-		case 1:
+		case SEARCH_ID:
 			// Cycle through all of the images
 			for (auto i = 1; i < currentCount(); ++i) {
 				imageOutput check = getImage(i);
@@ -86,7 +91,7 @@ vector<int> searchImages(int mode, string text) {
 			}
 			break;
 		// Search by filename
-		case 2:
+		case SEARCH_NAME:
 			// Cycle through all of the images
 			for (auto i = 1; i < currentCount(); ++i) {
 				imageOutput check = getImage(i);
@@ -96,7 +101,7 @@ vector<int> searchImages(int mode, string text) {
 			}
 			break;
 		// Search by extension
-		case 3:
+		case SEARCH_EXT:
 			// Cycle through all of the images
 			for (auto i = 1; i < currentCount(); ++i) {
 				imageOutput check = getImage(i);
@@ -106,7 +111,7 @@ vector<int> searchImages(int mode, string text) {
 			}
 			break;
 		// Search by filename.extension
-		case 4:
+		case SEARCH_NAME_EXT:
 			// Cycle through all of the images
 			for (auto i = 1; i < currentCount(); ++i) {
 				imageOutput check = getImage(i);
@@ -116,7 +121,7 @@ vector<int> searchImages(int mode, string text) {
 			}
 			break;
 		// Search by tag
-		case 5:
+		case SEARCH_TAG:
 			// Cycle through all of the images
 			for (auto i = 1; i < currentCount(); ++i) {
 				imageOutput check = getImage(i);

@@ -1,3 +1,4 @@
+// Header and function definitions
 #include "global.h"
 
 // Asks the user for an input file and accept it if extension is valid.
@@ -8,10 +9,10 @@ int imageInput::acceptInput() {
 
 	// Determines if file is a local file or a URL
 	if ((loc.substr(0, 7) == "http://" || loc.substr(0, 8) == "https://") || loc.substr(0, 4) == "www.") {
-		type = 0;
+		type = FILE_LOCAL;
 	} else {
 		// local file
-		type = 1;
+		type = FILE_URL;
 	}
 
 	// Invalid extension
@@ -34,8 +35,22 @@ int imageInput::acceptInput() {
 	addEntry();
 
 	return 0;
+}
 
+// Print image info
+void imageInput::printInfo() {
+	cout << "------\nlocation:\t" << loc << "\nname:\t" << name << "\nextension:\t" << extension << "\ntype:\t" << type << "\n------" << endl;
+}
 
+// Add image to database
+void imageInput::addEntry() {
+	// Update value of counter
+	ofstream db("db", ios::app);
+	if (db.is_open()) {
+		// 1^reveilleVIII.jpg^1029475849^null^tag1^tag2^tag3^tag4^tag5
+		db << getID() << "^" << getName() << "^" << getExtension() << "^" << time(0) << "^" << getLoc() << "^^^^^^\n";
+		db.close();
+	}
 }
 
 // Checks the file for a valid extension and also updates value of object's extension
@@ -69,7 +84,7 @@ bool imageInput::validExtension(string file) {
 
 // Sets the values of the imageInput's name and extension
 void imageInput::setAttributes(string file) {
-	// init vars
+	// Init. vars
 	int pos = 1;
 	string section, ext, name;
 
@@ -107,13 +122,13 @@ void imageInput::setAttributes(string file) {
 	id = to_string(currentCount());
 }
 
-// save the image
+// Save the image
 int imageInput::saveImage() {
 	string command;
 	int error = 0;
 
 	// if imageInput is a URL, download from internet
-	if (getType() == 0) {
+	if (getType() == FILE_LOCAL) {
 		command = "wget --no-check-certificate " + getLoc() + " -O images/" + getID() + "." + getExtension() + " >/dev/null 2>&1";
 	} else  {
 		// copy local file
@@ -124,7 +139,7 @@ int imageInput::saveImage() {
 	error = system(command.c_str());
 
 	// Error downloading from URL
-	if (error != 0 && getType() == 0) {
+	if (error != 0 && getType() == FILE_LOCAL) {
 		// remove file that is downloaded since it is invalid
 		command = "rm images/" + getID() + "." + getExtension();
 		system(command.c_str());
@@ -133,7 +148,7 @@ int imageInput::saveImage() {
 	}
 
 	// Error copying local file
-	if (error != 0 && getType() == 1) {
+	if (error != 0 && getType() == FILE_URL) {
 		return 3;
 	}
 
@@ -141,20 +156,4 @@ int imageInput::saveImage() {
 	updateCount();
 
 	return 0;
-}
-
-// print image info
-void imageInput::printInfo() {
-	cout << "------\nlocation:\t" << loc << "\nname:\t" << name << "\nextension:\t" << extension << "\ntype:\t" << type << "\n------" << endl;
-}
-
-// Add image to db
-void imageInput::addEntry() {
-	// Update value of counter
-	ofstream db("db", ios::app);
-	if (db.is_open()) {
-		// 1^reveilleVIII.jpg^1029475849^null^tag1^tag2^tag3^tag4^tag5
-		db << getID() << "^" << getName() << "^" << getExtension() << "^" << time(0) << "^" << getLoc() << "^^^^^^\n";
-		db.close();
-	}
 }

@@ -15,7 +15,7 @@ void imageOutput::setAttributes(int id, string name, string ext, int date, strin
 
 }
 
-// print image info
+// Print image info
 void imageOutput::printInfo() {
 	cout << "------" << endl;
 	cout << "id:\t\t" << id << endl;

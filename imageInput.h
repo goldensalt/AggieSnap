@@ -1,15 +1,17 @@
 class imageInput {
-	string loc, name, extension, id;
-	int type = 0;
+	int type = 0, id = 0;
+	string loc, name, extension;
 	public:
 		int acceptInput();
 		void printInfo();
 		void addEntry();
-		string getID() { return id; }
+
+		// Get functions
 		string getLoc() { return loc; }
-		int getType() { return type; }
 		string getName() { return name; }
 		string getExtension() { return extension; }
+		string getID() { return id; }
+		int getType() { return type; }
 	private:
 		bool validExtension(string);
 		void setAttributes(string);
