@@ -1,4 +1,3 @@
-// All of our header files and function definitions
 #include "global.h"
 
 int main() {
