@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <fstream>
 #include <string>
+#include <time.h>
 using namespace std;
 
 // Constants for searchImages function

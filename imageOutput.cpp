@@ -4,7 +4,7 @@
 void imageOutput::setAttributes(int id, string name, string ext, int date, string loc, string tag_one, string tag_two, string tag_three, string tag_four, string tag_five) {
 	this->id = id;
 	this->name = name;
-	this->ext = ext;
+	this->extension = ext;
 	this->date = date;
 	this->loc = loc;
 	tag.push_back(tag_one);
@@ -20,7 +20,7 @@ void imageOutput::printInfo() {
 	cout << "------" << endl;
 	cout << "id:\t\t" << id << endl;
 	cout << "name:\t\t" << name << endl;
-	cout << "Extension:\t" << ext << endl;
+	cout << "Extension:\t" << extension << endl;
 	cout << "date:\t\t" << date << endl;
 	cout << "loc:\t\t" << loc << endl;
 	cout << "tag 1:\t\t" << tag[0] << endl;

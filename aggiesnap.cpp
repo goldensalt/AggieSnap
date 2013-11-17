@@ -19,14 +19,22 @@ int main() {
 
 		// Error codes
 		// Invalid extension
-		if (error == 1) {
-			cerr << "Error: invalid image extension." << endl << endl;
-		} else if (error == 2) {
-			// Invalid url
-			cerr << "Error: unable to download image from supplied URL." << endl << endl;
-		} else if (error == 3) {
-			// Invalid file location
-			cerr << "Error: unable to find local image from supplied location." << endl << endl;
+		switch (error) {
+			case 0:
+				// No error occured
+				break;
+			case 1:
+				cerr << "Error: Invalid image extension." << endl << endl;
+				break;
+			case 2:
+				cerr << "Error: Unable to download image from supplied URL." << endl << endl;
+				break;
+			case 3:
+				cerr << "Error: Unable to find local image from supplied location." << endl << endl;
+				break;
+			default:
+				cerr << "Error: Unknown error." << endl << endl;
+
 		}
 
 		// If user hasn't finished adding images and no error occured, report image has been added and increment total

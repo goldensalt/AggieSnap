@@ -10,7 +10,7 @@ class imageInput {
 		string getLoc() { return loc; }
 		string getName() { return name; }
 		string getExtension() { return extension; }
-		string getID() { return id; }
+		int getID() { return id; }
 		int getType() { return type; }
 	private:
 		bool validExtension(string);

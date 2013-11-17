@@ -7,6 +7,11 @@ int imageInput::acceptInput() {
 	cout << "Please enter a URL or local picture filename: ";
 	cin >> loc;
 
+	// User has finished inputting images
+	if (loc == "done") {
+		return 0;
+	}
+
 	// Determines if file is a local file or a URL
 	if ((loc.substr(0, 7) == "http://" || loc.substr(0, 8) == "https://") || loc.substr(0, 4) == "www.") {
 		type = FILE_LOCAL;
@@ -103,7 +108,11 @@ void imageInput::setAttributes(string file) {
 
 			// Record filename
 			if (section.substr(0, 1) == "/" || pos == file.length()) {
-				name = section.substr(1, section.length()-ext.length()-2);
+				if (getType() == FILE_URL) {
+					name = section.substr(0, section.length()-ext.length()-1);
+				} else {
+					name = section.substr(1, section.length()-ext.length()-2);
+				}
 
 				// Set imageInput's name
 				this->name = name;
@@ -119,7 +128,7 @@ void imageInput::setAttributes(string file) {
 	}
 
 	// Set image ID
-	id = to_string(currentCount());
+	id = currentCount();
 }
 
 // Save the image
@@ -129,10 +138,10 @@ int imageInput::saveImage() {
 
 	// if imageInput is a URL, download from internet
 	if (getType() == FILE_LOCAL) {
-		command = "wget --no-check-certificate " + getLoc() + " -O images/" + getID() + "." + getExtension() + " >/dev/null 2>&1";
+		command = "wget --no-check-certificate " + getLoc() + " -O images/" + to_string(getID()) + "." + getExtension() + " >/dev/null 2>&1";
 	} else  {
 		// copy local file
-		command = "cp " + getLoc() +  " images/" + getID() + "." + getExtension() + " >/dev/null 2>&1";
+		command = "cp " + getLoc() +  " images/" + to_string(getID()) + "." + getExtension() + " >/dev/null 2>&1";
 	}
 
 	// Execute command
@@ -141,7 +150,7 @@ int imageInput::saveImage() {
 	// Error downloading from URL
 	if (error != 0 && getType() == FILE_LOCAL) {
 		// remove file that is downloaded since it is invalid
-		command = "rm images/" + getID() + "." + getExtension();
+		command = "rm images/" + to_string(getID()) + "." + getExtension();
 		system(command.c_str());
 
 		return 2;

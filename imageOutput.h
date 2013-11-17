@@ -7,10 +7,10 @@ class imageOutput {
 		void printInfo();
 
 		// Get functions
-		int getID() { return id; }
-		string getName() { return name; }
-		string getExtension() { return ext; }
-		int getDate() { return date; }
 		string getLoc() { return loc; }
+		string getName() { return name; }
+		string getExtension() { return extension; }
+		int getID() { return id; }
+		int getDate() { return date; }
 		string getTag(int num) { return tag[(num-1)]; }
 };
